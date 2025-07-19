@@ -2,17 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Nested iframes with Radio Buttons</title>
+  <title>Nested iframes with Radio Buttons (No src)</title>
   <style>
     iframe {
       width: 320px;
       height: 240px;
-      border: 1px solid #333;
+      border: 1px solid #444;
+      display: block;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Main Page</h1>
-  <iframe src="middle.html"></iframe>
+
+  <h2>Nested iframes with radio buttons</h2>
+  <iframe id="outer-frame"></iframe>
+
+  <script>
+    // Step 1: Create content for the innermost iframe (with radio buttons)
+    const innerContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8" />
+        <title>Inner Frame</title>
+      </head>
+      <body>
+        <h4>Select an option:</h4>
+        <form>
+          <label><input type="radio" name="choice" value="1"> Option 1</label><br>
+          <label><input type="radio" name="choice" value="2"> Option 2</label><br>
+          <label><input type="radio" name="choice" value="3"> Option 3</label><br>
+        </form>
+      </body>
+      </html>
+    `;
+
+    // Step 2: Create content for the middle iframe (injects inner iframe)
+    const middleContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8" />
+        <title>Middle Frame</title>
+        <style>
+          iframe {
+            width: 280px;
+            height: 180px;
+            border: 1px solid #888;
+          }
+        </style>
+      </head>
+      <body>
+        <h3>Middle Frame</h3>
+        <iframe id="inner-frame"></iframe>
+
+        <script>
+          const innerFrame = document.getElementById("inner-frame");
+          const innerDoc = innerFrame.contentWindow.document;
+          innerDoc.open();
+          innerDoc.write(${JSON.stringify(innerContent)});
+          innerDoc.close();
+        <\/script>
+      </body>
+      </html>
+    `;
+
+    // Step 3: Inject middle iframe content into outer iframe
+    const outerFrame = document.getElementById("outer-frame");
+    const outerDoc = outerFrame.contentWindow.document;
+    outerDoc.open();
+    outerDoc.write(middleContent);
+    outerDoc.close();
+  </script>
+
 </body>
 </html>
