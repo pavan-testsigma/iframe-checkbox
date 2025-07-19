@@ -2,17 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Checkboxes in iframe</title>
+  <title>Checkboxes in Shadow DOM</title>
   <style>
-    iframe {
-      width: 300px;
-      height: 200px;
+    body {
+      font-family: Arial, sans-serif;
+    }
+    checkbox-container {
+      display: block;
+      margin-top: 20px;
+      padding: 10px;
       border: 1px solid #ccc;
+      width: 250px;
     }
   </style>
 </head>
 <body>
-  <h1>Main Page</h1>
-  <iframe src="checkboxes.html"></iframe>
+
+  <h2>Shadow DOM Example</h2>
+
+  <checkbox-container></checkbox-container>
+
+  <script>
+    class CheckboxContainer extends HTMLElement {
+      constructor() {
+        super();
+
+        // Attach Shadow DOM
+        const shadow = this.attachShadow({ mode: 'open' });
+
+        // Create container
+        const container = document.createElement('div');
+
+        // Add styles (optional)
+        const style = document.createElement('style');
+        style.textContent = `
+          div {
+            padding: 10px;
+            background: #f9f9f9;
+          }
+          label {
+            display: block;
+            margin-bottom: 8px;
+          }
+        `;
+
+        // Create checkboxes
+        container.innerHTML = `
+          <label><input type="checkbox" name="option1"> Option 1</label>
+          <label><input type="checkbox" name="option2"> Option 2</label>
+          <label><input type="checkbox" name="option3"> Option 3</label>
+        `;
+
+        // Append everything to shadow root
+        shadow.appendChild(style);
+        shadow.appendChild(container);
+      }
+    }
+
+    // Define custom element
+    customElements.define('checkbox-container', CheckboxContainer);
+  </script>
+
 </body>
 </html>
