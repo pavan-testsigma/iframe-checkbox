@@ -2,79 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Nested Shadow DOM with Checkboxes</title>
+  <title>Radio Buttons in iframe</title>
   <style>
-    outer-container {
-      display: block;
-      margin-top: 20px;
-      border: 1px solid #444;
-      padding: 10px;
+    iframe {
       width: 300px;
+      height: 200px;
+      border: 1px solid #aaa;
     }
   </style>
 </head>
 <body>
 
-  <h2>Nested Shadow DOM Example</h2>
-  <outer-container></outer-container>
+  <h2>Main Page</h2>
+  <p>The radio buttons below are loaded from an iframe:</p>
 
-  <script>
-    // Define inner component (creates the INNER shadow DOM)
-    class InnerContainer extends HTMLElement {
-      constructor() {
-        super();
-        const shadow = this.attachShadow({ mode: 'open' });
-
-        const style = document.createElement('style');
-        style.textContent = `
-          div {
-            background: #f1f1f1;
-            padding: 10px;
-          }
-          label {
-            display: block;
-            margin-bottom: 8px;
-          }
-        `;
-
-        const container = document.createElement('div');
-        container.innerHTML = `
-          <label><input type="checkbox" name="option1"> Option 1</label>
-          <label><input type="checkbox" name="option2"> Option 2</label>
-          <label><input type="checkbox" name="option3"> Option 3</label>
-        `;
-
-        shadow.appendChild(style);
-        shadow.appendChild(container);
-      }
-    }
-
-    customElements.define('inner-container', InnerContainer);
-
-    // Define outer component (creates the OUTER shadow DOM and adds <inner-container>)
-    class OuterContainer extends HTMLElement {
-      constructor() {
-        super();
-        const shadow = this.attachShadow({ mode: 'open' });
-
-        const style = document.createElement('style');
-        style.textContent = `
-          div {
-            background: #e0e0e0;
-            padding: 10px;
-          }
-        `;
-
-        const container = document.createElement('div');
-        container.innerHTML = `<p>This is outer shadow DOM</p><inner-container></inner-container>`;
-
-        shadow.appendChild(style);
-        shadow.appendChild(container);
-      }
-    }
-
-    customElements.define('outer-container', OuterContainer);
-  </script>
+  <iframe src="radio-buttons.html"></iframe>
 
 </body>
 </html>
