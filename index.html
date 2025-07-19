@@ -1,40 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Radio Buttons in Shadow DOM</title>
+  <meta charset="UTF-8" />
+  <title>Nested Shadow DOM with Radio Buttons</title>
   <style>
-    radio-button-group {
+    outer-radio-group {
       display: block;
       margin-top: 20px;
-      border: 1px solid #ccc;
+      border: 1px solid #333;
       padding: 10px;
-      width: 300px;
+      width: 320px;
     }
   </style>
 </head>
 <body>
 
-  <h2>Radio Buttons inside Shadow DOM</h2>
+  <h2>Radio Buttons Inside Nested Shadow DOM</h2>
 
-  <radio-button-group></radio-button-group>
+  <outer-radio-group></outer-radio-group>
 
   <script>
-    class RadioButtonGroup extends HTMLElement {
+    // Inner Custom Element: Contains the radio buttons inside its own shadow DOM
+    class InnerRadioGroup extends HTMLElement {
       constructor() {
         super();
 
-        // Attach Shadow DOM
         const shadow = this.attachShadow({ mode: 'open' });
 
-        // Create container
         const wrapper = document.createElement('div');
 
-        // Apply scoped styles
         const style = document.createElement('style');
         style.textContent = `
           div {
-            font-family: Arial, sans-serif;
             background: #f9f9f9;
             padding: 10px;
           }
@@ -44,7 +41,6 @@
           }
         `;
 
-        // Create radio buttons
         wrapper.innerHTML = `
           <form>
             <label><input type="radio" name="choice" value="1"> Option 1</label>
@@ -53,14 +49,43 @@
           </form>
         `;
 
-        // Append everything to shadow root
         shadow.appendChild(style);
         shadow.appendChild(wrapper);
       }
     }
 
-    // Register the custom element
-    customElements.define('radio-button-group', RadioButtonGroup);
+    // Define inner component
+    customElements.define('inner-radio-group', InnerRadioGroup);
+
+    // Outer Custom Element: Adds <inner-radio-group> inside its shadow DOM
+    class OuterRadioGroup extends HTMLElement {
+      constructor() {
+        super();
+
+        const shadow = this.attachShadow({ mode: 'open' });
+
+        const container = document.createElement('div');
+        container.innerHTML = `
+          <h4>Outer Shadow DOM</h4>
+          <inner-radio-group></inner-radio-group>
+        `;
+
+        const style = document.createElement('style');
+        style.textContent = `
+          div {
+            background: #e8e8e8;
+            padding: 10px;
+            border-radius: 5px;
+          }
+        `;
+
+        shadow.appendChild(style);
+        shadow.appendChild(container);
+      }
+    }
+
+    // Define outer component
+    customElements.define('outer-radio-group', OuterRadioGroup);
   </script>
 
 </body>
