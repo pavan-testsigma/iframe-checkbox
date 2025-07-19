@@ -1,92 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Nested Shadow DOM with Radio Buttons</title>
+  <meta charset="UTF-8">
+  <title>Button in iframe Example</title>
   <style>
-    outer-radio-group {
-      display: block;
-      margin-top: 20px;
+    iframe {
+      width: 300px;
+      height: 200px;
       border: 1px solid #333;
-      padding: 10px;
-      width: 320px;
     }
   </style>
 </head>
 <body>
 
-  <h2>Radio Buttons Inside Nested Shadow DOM</h2>
-
-  <outer-radio-group></outer-radio-group>
-
-  <script>
-    // Inner Custom Element: Contains the radio buttons inside its own shadow DOM
-    class InnerRadioGroup extends HTMLElement {
-      constructor() {
-        super();
-
-        const shadow = this.attachShadow({ mode: 'open' });
-
-        const wrapper = document.createElement('div');
-
-        const style = document.createElement('style');
-        style.textContent = `
-          div {
-            background: #f9f9f9;
-            padding: 10px;
-          }
-          label {
-            display: block;
-            margin-bottom: 8px;
-          }
-        `;
-
-        wrapper.innerHTML = `
-          <form>
-            <label><input type="radio" name="choice" value="1"> Option 1</label>
-            <label><input type="radio" name="choice" value="2"> Option 2</label>
-            <label><input type="radio" name="choice" value="3"> Option 3</label>
-          </form>
-        `;
-
-        shadow.appendChild(style);
-        shadow.appendChild(wrapper);
-      }
-    }
-
-    // Define inner component
-    customElements.define('inner-radio-group', InnerRadioGroup);
-
-    // Outer Custom Element: Adds <inner-radio-group> inside its shadow DOM
-    class OuterRadioGroup extends HTMLElement {
-      constructor() {
-        super();
-
-        const shadow = this.attachShadow({ mode: 'open' });
-
-        const container = document.createElement('div');
-        container.innerHTML = `
-          <h4>Outer Shadow DOM</h4>
-          <inner-radio-group></inner-radio-group>
-        `;
-
-        const style = document.createElement('style');
-        style.textContent = `
-          div {
-            background: #e8e8e8;
-            padding: 10px;
-            border-radius: 5px;
-          }
-        `;
-
-        shadow.appendChild(style);
-        shadow.appendChild(container);
-      }
-    }
-
-    // Define outer component
-    customElements.define('outer-radio-group', OuterRadioGroup);
-  </script>
+  <h2>Main Page</h2>
+  <iframe src="button-frame.html"></iframe>
 
 </body>
 </html>
