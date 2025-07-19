@@ -2,43 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Checkboxes in Shadow DOM</title>
+  <title>Nested Shadow DOM with Checkboxes</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    checkbox-container {
+    outer-container {
       display: block;
       margin-top: 20px;
+      border: 1px solid #444;
       padding: 10px;
-      border: 1px solid #ccc;
-      width: 250px;
+      width: 300px;
     }
   </style>
 </head>
 <body>
 
-  <h2>Shadow DOM Example</h2>
-
-  <checkbox-container></checkbox-container>
+  <h2>Nested Shadow DOM Example</h2>
+  <outer-container></outer-container>
 
   <script>
-    class CheckboxContainer extends HTMLElement {
+    // Define inner component (creates the INNER shadow DOM)
+    class InnerContainer extends HTMLElement {
       constructor() {
         super();
-
-        // Attach Shadow DOM
         const shadow = this.attachShadow({ mode: 'open' });
 
-        // Create container
-        const container = document.createElement('div');
-
-        // Add styles (optional)
         const style = document.createElement('style');
         style.textContent = `
           div {
+            background: #f1f1f1;
             padding: 10px;
-            background: #f9f9f9;
           }
           label {
             display: block;
@@ -46,21 +37,43 @@
           }
         `;
 
-        // Create checkboxes
+        const container = document.createElement('div');
         container.innerHTML = `
           <label><input type="checkbox" name="option1"> Option 1</label>
           <label><input type="checkbox" name="option2"> Option 2</label>
           <label><input type="checkbox" name="option3"> Option 3</label>
         `;
 
-        // Append everything to shadow root
         shadow.appendChild(style);
         shadow.appendChild(container);
       }
     }
 
-    // Define custom element
-    customElements.define('checkbox-container', CheckboxContainer);
+    customElements.define('inner-container', InnerContainer);
+
+    // Define outer component (creates the OUTER shadow DOM and adds <inner-container>)
+    class OuterContainer extends HTMLElement {
+      constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+
+        const style = document.createElement('style');
+        style.textContent = `
+          div {
+            background: #e0e0e0;
+            padding: 10px;
+          }
+        `;
+
+        const container = document.createElement('div');
+        container.innerHTML = `<p>This is outer shadow DOM</p><inner-container></inner-container>`;
+
+        shadow.appendChild(style);
+        shadow.appendChild(container);
+      }
+    }
+
+    customElements.define('outer-container', OuterContainer);
   </script>
 
 </body>
